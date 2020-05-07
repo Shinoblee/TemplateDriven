@@ -1,0 +1,145 @@
+<div class="container-fluid">
+  <h1>Bootcamp enrollment form</h1>
+  <div class="alert alert-danger" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+  <form
+    #userForm="ngForm"
+    *ngIf="!submitted"
+    (ngSubmit)="onSubmit(userForm)"
+    novalidate
+  >
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input
+        #name="ngModel"
+        required
+        type="text"
+        [class.is-invalid]="name.invalid && name.touched"
+        class="form-control"
+        name="username"
+        [(ngModel)]="userModel.name"
+      />
+      <small class="text-danger" [class.d-none]="name.valid || name.untouched"
+        >Name is required</small
+      >
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        type="text"
+        required
+        #email="ngModel"
+        pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+        [class.is-invalid]="email.invalid && email.touched"
+        class="form-control"
+        name="email"
+        [(ngModel)]="userModel.email"
+      />
+      <div *ngIf="email.errors && (email.invalid || email.touched)">
+        <small class="text-danger" *ngIf="email.errors.required"
+          >Email is required</small
+        >
+        <small class="text-danger" *ngIf="email.errors.pattern"
+          >Email address is invalid</small
+        >
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="phone">Phone</label>
+      <input
+        type="tel"
+        required
+        #phone="ngModel"
+        pattern="^\d{10}$"
+        [class.is-invalid]="phone.invalid && phone.touched"
+        class="form-control"
+        name="phone"
+        [(ngModel)]="userModel.phone"
+      />
+      <!-- <small class="text-danger" [class.d-none]="phone.valid || phone.untouched"
+        >Phone number is required must be 10 digits</small
+      > -->
+      <div *ngIf="phone.errors && (phone.invalid || phone.touched)">
+        <small class="text-danger" *ngIf="phone.errors.required"
+          >Phone number is required</small
+        >
+        <small class="text-danger" *ngIf="phone.errors.pattern"
+          >Phone number must be 10 digits</small
+        >
+      </div>
+    </div>
+
+    <div class="form-group">
+      <select
+        (blur)="validateTopic(topic.value)"
+        (change)="validateTopic(topic.value)"
+        name="class"
+        required
+        #topic="ngModel"
+        [class.is-invalid]="topicHasError && topic.touched"
+        id="class"
+        class="custom-select"
+        [(ngModel)]="userModel.topic"
+      >
+        <option value="default">I am interested in</option>
+        <option *ngFor="let topic of topics">{{ topic }}</option>
+      </select>
+      <small
+        class="text-danger"
+        [class.d-none]="!topicHasError || topic.untouched"
+        >Please choose a topic</small
+      >
+    </div>
+
+    <div class="mb-3">
+      <label for="timePreference">Time Preference</label>
+      <div class="form-check">
+        <input
+          type="radio"
+          class="form-check-input"
+          name="timePreference"
+          value="morning"
+          [(ngModel)]="userModel.timePreference"
+        />
+        <label for="morning" class="form-check-label"
+          >Morning (9AM - 12PM)</label
+        >
+      </div>
+      <div class="form-check">
+        <input
+          type="radio"
+          class="form-check-input"
+          name="timePreference"
+          value="evening"
+          [(ngModel)]="userModel.timePreference"
+        />
+        <label for="evening" class="form-check-label"
+          >Evening (5PM - 8PM)</label
+        >
+      </div>
+    </div>
+
+    <div class="form-check mb-3">
+      <input
+        type="checkbox"
+        class="form-check-input"
+        name="promotionalOption"
+        [(ngModel)]="userModel.subscribe"
+      />
+      <label for="promotionOption" class="form-check-label"
+        >Send me promotional offers</label
+      >
+    </div>
+
+    <button
+      [disabled]="userForm.form.invalid || topicHasError"
+      class="btn btn-primary"
+      type="submit"
+    >
+      Submit Form
+    </button>
+  </form>
+</div>
